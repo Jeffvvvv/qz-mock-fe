@@ -118,7 +118,13 @@ export default defineConfig({
     configProvider: {
       theme: {
         token: {
+          colorPrimary: '#1890ff',
           fontFamily: 'AlibabaSans, sans-serif',
+        },
+        components: {
+          Button: {
+            colorPrimary: '#1890ff',
+          },
         },
       },
     },

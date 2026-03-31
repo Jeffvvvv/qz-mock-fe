@@ -1,165 +1,346 @@
-import { PageContainer } from '@ant-design/pro-components';
-import { useModel } from '@umijs/max';
-import { Card, theme } from 'antd';
-import React from 'react';
+import { createStyles } from 'antd-style';
+import { homePageToken } from '@/theme/tokens';
 
-/**
- * 每个单独的卡片，为了复用样式抽成了组件
- * @param param0
- * @returns
- */
-const InfoCard: React.FC<{
-  title: string;
-  index: number;
-  desc: string;
-  href: string;
-}> = ({ title, href, index, desc }) => {
-  const { useToken } = theme;
+const ASSETS = '/assets/home';
 
-  const { token } = useToken();
+const useStyles = createStyles(({ token }) => ({
+  container: {
+    position: 'relative',
+    width: '100%',
+    minHeight: 'calc(100vh - 56px)',
+    overflow: 'hidden',
+    background: homePageToken.heroBg,
+  },
 
-  return (
-    <div
-      style={{
-        backgroundColor: token.colorBgContainer,
-        boxShadow: token.boxShadow,
-        borderRadius: '8px',
-        fontSize: '14px',
-        color: token.colorTextSecondary,
-        lineHeight: '22px',
-        padding: '16px 19px',
-        minWidth: '220px',
-        flex: 1,
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          gap: '4px',
-          alignItems: 'center',
-        }}
-      >
-        <div
-          style={{
-            width: 48,
-            height: 48,
-            lineHeight: '22px',
-            backgroundSize: '100%',
-            textAlign: 'center',
-            padding: '8px 16px 16px 12px',
-            color: '#FFF',
-            fontWeight: 'bold',
-            backgroundImage:
-              "url('https://gw.alipayobjects.com/zos/bmw-prod/daaf8d50-8e6d-4251-905d-676a24ddfa12.svg')",
-          }}
-        >
-          {index}
-        </div>
-        <div
-          style={{
-            fontSize: '16px',
-            color: token.colorText,
-            paddingBottom: 8,
-          }}
-        >
-          {title}
-        </div>
-      </div>
-      <div
-        style={{
-          fontSize: '14px',
-          color: token.colorTextSecondary,
-          textAlign: 'justify',
-          lineHeight: '22px',
-          marginBottom: 8,
-        }}
-      >
-        {desc}
-      </div>
-      <a href={href} target="_blank" rel="noreferrer">
-        了解更多 {'>'}
-      </a>
-    </div>
-  );
-};
+  /* ---- 背景层 ---- */
+  heroBgWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '61%',
+    opacity: 0.3,
+  },
+  heroBgImg: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    mixBlendMode: 'multiply',
+  },
+  heroBgGradient: {
+    position: 'absolute',
+    inset: 0,
+    background: `linear-gradient(to bottom, rgba(255,255,255,0), ${homePageToken.heroBg})`,
+  },
+
+  /* ---- 暗黑覆盖层 ---- */
+  darkOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    background: homePageToken.darkBg,
+    clipPath: 'polygon(100% 0, 100% 100%, 55% 100%)',
+    opacity: 0.92,
+    pointerEvents: 'none',
+  },
+
+  /* ---- 装饰元素 ---- */
+  decorations: {
+    position: 'absolute',
+    inset: 0,
+    pointerEvents: 'none',
+    overflow: 'hidden',
+  },
+  decoImg: {
+    position: 'absolute',
+    objectFit: 'contain',
+  },
+  deco1: {
+    width: 308,
+    height: 308,
+    top: '26%',
+    left: '25%',
+    opacity: 0.6,
+  },
+  deco2: {
+    width: 284,
+    height: 284,
+    bottom: '-10%',
+    right: '-5%',
+    opacity: 0.5,
+  },
+  deco3: {
+    width: 128,
+    height: 128,
+    bottom: '5%',
+    left: '-2%',
+    opacity: 0.5,
+  },
+  decoFrame: {
+    width: 610,
+    height: 610,
+    top: '-40%',
+    right: '10%',
+    opacity: 0.3,
+  },
+
+  /* ---- 徽章 ---- */
+  badges: {
+    position: 'absolute',
+    top: 29,
+    left: 60,
+    display: 'flex',
+    gap: 16,
+    zIndex: 10,
+    flexWrap: 'wrap',
+  },
+  badge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 6,
+    height: 50,
+    padding: '0 22px',
+    borderRadius: 8,
+    border: '2px solid #000',
+    fontWeight: 700,
+    fontSize: 22,
+    color: '#fff',
+    whiteSpace: 'nowrap' as const,
+    cursor: 'default',
+  },
+  badgePurple: {
+    background: homePageToken.accentPurple,
+  },
+  badgeBlack: {
+    background: '#000',
+  },
+  badgeIcon: {
+    width: 18,
+    height: 22,
+    objectFit: 'contain' as const,
+  },
+
+  /* ---- 主内容区 ---- */
+  heroContent: {
+    position: 'relative',
+    zIndex: 5,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 100,
+    paddingBottom: 40,
+  },
+  logoRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 24,
+    marginBottom: 16,
+  },
+  logo: {
+    width: 200,
+    height: 200,
+    objectFit: 'contain',
+  },
+  titleImg: {
+    height: 87,
+    objectFit: 'contain',
+  },
+  versionRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 14,
+    marginTop: 8,
+    marginBottom: 40,
+  },
+  versionText: {
+    fontFamily:
+      "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
+    fontWeight: 700,
+    fontSize: 30,
+    color: token.colorText,
+  },
+
+  /* ---- 特性列表 ---- */
+  features: {
+    position: 'relative',
+    zIndex: 5,
+    maxWidth: 928,
+    margin: '0 auto',
+    padding: '0 48px 48px',
+    fontSize: 14,
+    lineHeight: 1.8,
+    color: token.colorText,
+  },
+  featureItem: {
+    marginBottom: 4,
+  },
+  featureBold: {
+    fontWeight: 700,
+  },
+
+  /* ---- 暗黑侧特性文字 ---- */
+  darkFeatures: {
+    position: 'absolute',
+    bottom: 48,
+    right: 48,
+    maxWidth: 400,
+    zIndex: 6,
+    fontSize: 14,
+    lineHeight: 1.8,
+    color: '#fff',
+    textAlign: 'right' as const,
+  },
+  darkVersionRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: 14,
+    marginBottom: 8,
+  },
+  darkVersionText: {
+    fontFamily:
+      "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
+    fontWeight: 700,
+    fontSize: 30,
+    color: '#fff',
+  },
+  darkLabel: {
+    fontFamily:
+      "'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif",
+    fontWeight: 700,
+    fontSize: 30,
+    color: '#fff',
+  },
+}));
 
 const Welcome: React.FC = () => {
-  const { token } = theme.useToken();
-  const { initialState } = useModel('@@initialState');
+  const { styles, cx } = useStyles();
+
   return (
-    <PageContainer>
-      <Card
-        style={{
-          borderRadius: 8,
-        }}
-        styles={{
-          body: {
-            backgroundImage:
-              initialState?.settings?.navTheme === 'realDark'
-                ? 'background-image: linear-gradient(75deg, #1A1B1F 0%, #191C1F 100%)'
-                : 'background-image: linear-gradient(75deg, #FBFDFF 0%, #F5F7FF 100%)',
-          },
-        }}
-      >
-        <div
-          style={{
-            backgroundPosition: '100% -30%',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: '274px auto',
-            backgroundImage:
-              "url('https://gw.alipayobjects.com/mdn/rms_a9745b/afts/img/A*BuFmQqsB2iAAAAAAAAAAAAAAARQnAQ')",
-          }}
-        >
-          <div
-            style={{
-              fontSize: '20px',
-              color: token.colorTextHeading,
-            }}
-          >
-            欢迎使用 Ant Design Pro
-          </div>
-          <p
-            style={{
-              fontSize: '14px',
-              color: token.colorTextSecondary,
-              lineHeight: '22px',
-              marginTop: 16,
-              marginBottom: 32,
-              width: '65%',
-            }}
-          >
-            Ant Design Pro 是一个整合了 umi，Ant Design 和 ProComponents
-            的脚手架方案。致力于在设计规范和基础组件的基础上，继续向上构建，提炼出典型模板/业务组件/配套设计资源，进一步提升企业级中后台产品设计研发过程中的『用户』和『设计者』的体验。
-          </p>
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              gap: 16,
-            }}
-          >
-            <InfoCard
-              index={1}
-              href="https://umijs.org/docs/introduce/introduce"
-              title="了解 umi"
-              desc="umi 是一个可扩展的企业级前端应用框架,umi 以路由为基础的，同时支持配置式路由和约定式路由，保证路由的功能完备，并以此进行功能扩展。"
-            />
-            <InfoCard
-              index={2}
-              title="了解 ant design"
-              href="https://ant.design"
-              desc="antd 是基于 Ant Design 设计体系的 React UI 组件库，主要用于研发企业级中后台产品。"
-            />
-            <InfoCard
-              index={3}
-              title="了解 Pro Components"
-              href="https://procomponents.ant.design"
-              desc="ProComponents 是一个基于 Ant Design 做了更高抽象的模板组件，以 一个组件就是一个页面为开发理念，为中后台开发带来更好的体验。"
-            />
-          </div>
+    <div className={styles.container}>
+      {/* 背景图 */}
+      <div className={styles.heroBgWrapper}>
+        <img
+          className={styles.heroBgImg}
+          src={`${ASSETS}/hero-bg.png`}
+          alt=""
+          aria-hidden
+        />
+        <div className={styles.heroBgGradient} />
+      </div>
+
+      {/* 暗黑斜切覆盖层 */}
+      <div className={styles.darkOverlay} />
+
+      {/* 装饰性几何图形 */}
+      <div className={styles.decorations}>
+        <img
+          className={cx(styles.decoImg, styles.deco1)}
+          src={`${ASSETS}/decoration-1.png`}
+          alt=""
+          aria-hidden
+        />
+        <img
+          className={cx(styles.decoImg, styles.deco2)}
+          src={`${ASSETS}/decoration-2.png`}
+          alt=""
+          aria-hidden
+        />
+        <img
+          className={cx(styles.decoImg, styles.deco3)}
+          src={`${ASSETS}/decoration-3.png`}
+          alt=""
+          aria-hidden
+        />
+        <img
+          className={cx(styles.decoImg, styles.decoFrame)}
+          src={`${ASSETS}/decoration-frame.png`}
+          alt=""
+          aria-hidden
+        />
+      </div>
+
+      {/* 顶部徽章 */}
+      <div className={styles.badges}>
+        <div className={cx(styles.badge, styles.badgePurple)}>
+          <img
+            className={styles.badgeIcon}
+            src={`${ASSETS}/badge-icon.png`}
+            alt=""
+          />
+          Community Award 2022
         </div>
-      </Card>
-    </PageContainer>
+        <div className={cx(styles.badge, styles.badgeBlack)}>
+          <img
+            className={styles.badgeIcon}
+            src={`${ASSETS}/props-icon.png`}
+            alt=""
+          />
+          Bubbled Props
+        </div>
+      </div>
+
+      {/* 主内容：Logo + 标题 */}
+      <div className={styles.heroContent}>
+        <div className={styles.logoRow}>
+          <img
+            className={styles.logo}
+            src={`${ASSETS}/antd-logo.png`}
+            alt="Ant Design Logo"
+          />
+          <img
+            className={styles.titleImg}
+            src={`${ASSETS}/antd-text.png`}
+            alt="Ant Design"
+          />
+        </div>
+        <div className={styles.versionRow}>
+          <span className={styles.versionText}>Open Source</span>
+          <span className={styles.versionText}>4.23.3</span>
+        </div>
+      </div>
+
+      {/* 特性描述 - 亮色侧 */}
+      <div className={styles.features}>
+        <p className={styles.featureItem}>
+          <span>{'• '}</span>
+          <span className={styles.featureBold}>Efficiency: </span>
+          <span>
+            Built from scratch to take full advantage of auto layout +
+            constraints + layout grid mechanism, with minimal layer hierarchy
+            and naming
+          </span>
+        </p>
+        <p className={styles.featureItem}>
+          <span>{'• '}</span>
+          <span className={styles.featureBold}>Accurate-to-Code: </span>
+          <span>
+            We carefully study the HTML and CSS of the official GitHub repo in
+            order to achieve maximum consistency with the production code
+          </span>
+        </p>
+        <p className={styles.featureItem}>
+          <span>{'• '}</span>
+          <span className={styles.featureBold}>Up-to-Date: </span>
+          <span>
+            Components are always updated to the latest version and in direct
+            accordance to Ant Design changelog
+          </span>
+        </p>
+      </div>
+
+      {/* 暗黑侧内容 */}
+      <div className={styles.darkFeatures}>
+        <div className={styles.darkVersionRow}>
+          <span className={styles.darkVersionText}>Open Source</span>
+          <span className={styles.darkVersionText}>4.23.3</span>
+        </div>
+        <div className={styles.darkLabel}>Dark Theme</div>
+      </div>
+    </div>
   );
 };
 
